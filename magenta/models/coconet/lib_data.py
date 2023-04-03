@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Classes for datasets and batches."""
 import os
 
@@ -49,8 +48,11 @@ class Dataset(lib_util.Factory):
                         self.hparams.quantization_level))
 
     # Update the default pitch ranges in hparams to reflect that of dataset.
-    hparams.pitch_ranges = [self.min_pitch, self.max_pitch]
+    hparams.pitch_ranges = [self.min_pitch, self.max_pitch]  # legacy hparam
+    hparams.min_pitch = self.min_pitch
+    hparams.max_pitch = self.max_pitch
     hparams.shortest_duration = self.shortest_duration
+    hparams.dataset = self.key
     self.encoder = lib_pianoroll.get_pianoroll_encoder_decoder(hparams)
     data_path = os.path.join(tf.resource_loader.get_data_files_path(),
                              self.basepath, "%s.npz" % self.name)
@@ -149,6 +151,15 @@ class TestData(Dataset):
   key = "TestData"
   min_pitch = 0
   max_pitch = 127
+  shortest_duration = 0.125
+  num_instruments = 4
+  qpm = 60
+
+
+class Beethoven16thSeparated(Dataset):
+  key = "Beethoven16thSeparated"
+  min_pitch = 28
+  max_pitch = 101
   shortest_duration = 0.125
   num_instruments = 4
   qpm = 60

@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Utilities for converting between NoteSequences and pianorolls."""
 import numpy as np
 import pretty_midi
@@ -221,7 +220,7 @@ class PianorollEncoderDecoder(object):
     if out_of_range_pitch_count > 0:
       raise ValueError(
           '%d pitches out of the range (%d, %d) the model was trained on.' %
-          (out_of_range_pitch_count, self.min_pitch, self.max_pitch))
+          (out_of_range_pitch_count.item(), self.min_pitch, self.max_pitch))
     roll = roll[:, self.min_pitch:self.max_pitch + 1]
     return roll
 

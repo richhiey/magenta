@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -724,7 +724,7 @@ class MidiCaptor(threading.Thread):
           None.
 
     Returns:
-      The unqiue name of the callback thread to enable cancellation.
+      The unique name of the callback thread to enable cancellation.
 
     Raises:
       MidiHubError: If neither `signal` nor `period` or both are specified.

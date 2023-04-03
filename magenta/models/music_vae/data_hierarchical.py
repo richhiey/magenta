@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -219,7 +219,7 @@ def hierarchical_pad_tensors(tensors, sample_size, randomize, max_lengths,
     output = np.concatenate(
         [pad_with_value(x, max_lengths[-1], 0) for x in output])
 
-    if np.size(control):
+    if np.size(np.asarray(control, dtype=object)):
       control = tf.nest.flatten(
           pad_with_element(control, max_lengths[:-1],
                            data.np_onehot([control_pad_token], control_depth)))
@@ -262,7 +262,7 @@ class BaseHierarchicalNoteSequenceConverter(data.BaseNoteSequenceConverter):
   __metaclass__ = abc.ABCMeta
 
   def __init__(self, input_depth, input_dtype, output_depth, output_dtype,
-               control_depth=None, control_dtype=np.bool,
+               control_depth=None, control_dtype=bool,
                control_pad_token=None, end_token=None,
                max_lengths=None, presplit_on_time_changes=True,
                max_tensors_per_notesequence=None, flat_output=False):
@@ -372,11 +372,11 @@ class MultiInstrumentPerformanceConverter(
 
     super(MultiInstrumentPerformanceConverter, self).__init__(
         input_depth=depth,
-        input_dtype=np.bool,
+        input_dtype=bool,
         output_depth=depth,
-        output_dtype=np.bool,
+        output_dtype=bool,
         control_depth=control_depth,
-        control_dtype=np.bool,
+        control_dtype=bool,
         control_pad_token=control_pad_token,
         end_token=end_token,
         max_lengths=max_lengths,
@@ -596,7 +596,8 @@ class MultiInstrumentPerformanceConverter(
                                     self.output_depth, self.control_depth,
                                     self._control_pad_token)
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
+    note_sequence = item
     return data.split_process_and_combine(note_sequence,
                                           self._presplit_on_time_changes,
                                           self.max_tensors_per_notesequence,

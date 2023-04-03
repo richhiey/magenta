@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Forked classes and functions from `tf.contrib.seq2seq`."""
 
 import abc
@@ -589,7 +588,8 @@ class Helper(object, metaclass=abc.ABCMeta):
   Helper instances are used by `BasicDecoder`.
   """
 
-  @abc.abstractproperty
+  @property
+  @abc.abstractmethod
   def batch_size(self):
     """Batch size of tensor returned by `sample`.
 
@@ -597,7 +597,8 @@ class Helper(object, metaclass=abc.ABCMeta):
     """
     raise NotImplementedError("batch_size has not been implemented")
 
-  @abc.abstractproperty
+  @property
+  @abc.abstractmethod
   def sample_ids_shape(self):
     """Shape of tensor returned by `sample`, excluding the batch dimension.
 
@@ -605,7 +606,8 @@ class Helper(object, metaclass=abc.ABCMeta):
     """
     raise NotImplementedError("sample_ids_shape has not been implemented")
 
-  @abc.abstractproperty
+  @property
+  @abc.abstractmethod
   def sample_ids_dtype(self):
     """DType of tensor returned by `sample`.
 
@@ -847,7 +849,7 @@ class ScheduledOutputTrainingHelper(TrainingHelper):
   def initialize(self, name=None):
     return super(ScheduledOutputTrainingHelper, self).initialize(name=name)
 
-  def sample(self, time, outputs, state, name=None):
+  def sample(self, time, outputs, state, name=None):  # pylint: disable=arguments-renamed
     with tf.name_scope(name, "ScheduledOutputTrainingHelperSample",
                        [time, outputs, state]):
       return bernoulli_sample(
@@ -855,7 +857,7 @@ class ScheduledOutputTrainingHelper(TrainingHelper):
           sample_shape=self.batch_size,
           seed=self._seed)
 
-  def next_inputs(self, time, outputs, state, sample_ids, name=None):
+  def next_inputs(self, time, outputs, state, sample_ids, name=None):  # pylint: disable=arguments-renamed
     with tf.name_scope(name, "ScheduledOutputTrainingHelperNextInputs",
                        [time, outputs, state, sample_ids]):
       (finished, base_next_inputs, state) = (

@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Pipeline to create Performance dataset."""
 
 from magenta.pipelines import dag_pipeline
@@ -50,7 +49,8 @@ class EncoderPipeline(pipeline.Pipeline):
     self._control_signals = config.control_signals
     self._optional_conditioning = config.optional_conditioning
 
-  def transform(self, performance):
+  def transform(self, input_object):
+    performance = input_object
 
     if self._control_signals:
       # Encode conditional on control signals.
@@ -90,7 +90,8 @@ class PerformanceExtractor(pipeline.Pipeline):
     self._num_velocity_bins = num_velocity_bins
     self._note_performance = note_performance
 
-  def transform(self, quantized_sequence):
+  def transform(self, input_object):
+    quantized_sequence = input_object
     performances, stats = extract_performances(
         quantized_sequence,
         min_events_discard=self._min_events,

@@ -1,3 +1,7 @@
+# Status
+
+This repository is currently inactive and serves only as a supplement to the papers mentioned below. For our current transcription work, see the [MT3 blog post](https://g.co/magenta/mt3) and [MT3 GitHub repository](https://github.com/magenta/mt3).
+
 ## Onsets and Frames Transcription
 
 State of the art piano and drum transcription models, including velocity estimation.
@@ -22,7 +26,7 @@ Note that while we provide commits for code used in papers, we can provide suppo
 
 You may also be interested in a [PyTorch Onsets and Frames](https://github.com/jongwook/onsets-and-frames) implementation by [Jong Wook Kim](https://github.com/jongwook) (not supported by the Magenta team).
 
-Finally, we have also open sourced the [align_fine](https://github.com/magenta/note-seq/blob/master/note_seq/alignment) tool for high performance fine alignment of sequences that are already coarsely aligned, as described in the "Fine Alignment" section of the Appendix in the [MAESTRO paper](https://goo.gl/magenta/maestro-paper).
+Finally, we have also open sourced the [align_fine](https://github.com/magenta/note-seq/blob/main/note_seq/alignment) tool for high performance fine alignment of sequences that are already coarsely aligned, as described in the "Fine Alignment" section of the Appendix in the [MAESTRO paper](https://goo.gl/magenta/maestro-paper).
 
 ## JavaScript App
 
@@ -46,7 +50,7 @@ After unzipping that checkpoint, you can run the following command:
 ```bash
 MODEL_DIR=<path to directory containing checkpoint>
 onsets_frames_transcription_transcribe \
-  --model_dir="${CHECKPOINT_DIR}" \
+  --model_dir="${MODEL_DIR}" \
   <piano_recording1.wav, piano_recording2.wav, ...>
 ```
 
@@ -55,7 +59,7 @@ For drum transcription, use the [checkpoint](https://storage.googleapis.com/mage
 ```bash
 MODEL_DIR=<path to directory containing checkpoint>
 onsets_frames_transcription_transcribe \
-  --model_dir="${CHECKPOINT_DIR}" \
+  --model_dir="${MODEL_DIR}" \
   --config="drums" \
   <drums_recording1.wav, drums_recording2.wav, ...>
 ```
@@ -133,7 +137,7 @@ To use your own dataset or the [E-GMD dataset](https://g.co/magenta/e-gmd), see 
 
 Now can train your own transcription model using the training TFRecord file generated during dataset creation.
 
-Note that if you have the `audio_transform` hparam set to true (which it is by default), you will need to have the [sox](http://sox.sourceforge.net/) binary installed on your system.
+Note that if you have the `transform_audio` hparam set to true (which it is by default), you will need to have the [sox](http://sox.sourceforge.net/) binary installed on your system.
 
 ```bash
 TRAIN_EXAMPLES=<path to training tfrecord(s) generated during dataset creation>
@@ -199,7 +203,7 @@ TEST_EXAMPLES=<path to eval tfrecord(s) generated during dataset creation>
 OUTPUT_DIR=<path where output should be saved>
 
 onsets_frames_transcription_infer \
-  --model_dir="${CHECKPOINT_DIR}" \
+  --model_dir="${MODEL_DIR}" \
   --examples_path="${TEST_EXAMPLES}" \
   --output_dir="${OUTPUT_DIR}"
 ```

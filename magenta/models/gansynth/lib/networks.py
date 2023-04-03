@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Generator and discriminator for a progressive GAN model.
 
 See https://arxiv.org/abs/1710.10196 for details about the model.
@@ -73,7 +72,7 @@ class ResolutionSchedule(object):
   def final_resolutions(self):
     """Returns the final resolutions."""
     if self._scale_mode == 'ALL':
-      return tuple([r * self.scale_factor(1) for r in self._start_resolutions])
+      return tuple(r * self.scale_factor(1) for r in self._start_resolutions)
     elif self._scale_mode == 'H':
       return tuple([self._start_resolutions[0] * self.scale_factor(1)] +
                    list(self._start_resolutions[1:]))

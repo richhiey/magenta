@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ def combine_converter_tensors(converter_tensors, max_num_tensors=None,
     return ConverterTensors()
 
 
-def np_onehot(indices, depth, dtype=np.bool):
+def np_onehot(indices, depth, dtype=bool):
   """Converts 1D array of indices to a one-hot 2D array with given depth."""
   onehot_seq = np.zeros((len(indices), depth), dtype=dtype)
   onehot_seq[np.arange(len(indices)), indices] = 1.0
@@ -227,7 +227,7 @@ class BaseNoteSequenceConverter(object):
                output_depth,
                output_dtype,
                control_depth=0,
-               control_dtype=np.bool,
+               control_dtype=bool,
                end_token=None,
                max_tensors_per_notesequence=None,
                length_shape=(),
@@ -411,11 +411,11 @@ class LegacyEventListOneHotConverter(BaseNoteSequenceConverter):
     )
     super(LegacyEventListOneHotConverter, self).__init__(
         input_depth=depth,
-        input_dtype=np.bool,
+        input_dtype=bool,
         output_depth=depth,
-        output_dtype=np.bool,
+        output_dtype=bool,
         control_depth=control_depth,
-        control_dtype=np.bool,
+        control_dtype=bool,
         end_token=legacy_encoder_decoder.num_classes if add_end_token else None,
         presplit_on_time_changes=presplit_on_time_changes,
         max_tensors_per_notesequence=max_tensors_per_notesequence)
@@ -521,8 +521,9 @@ class LegacyEventListOneHotConverter(BaseNoteSequenceConverter):
 
     return control_seqs
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
     """Converts NoteSequence to unique, one-hot tensor sequences."""
+    note_sequence = item
     try:
       if self._steps_per_quarter:
         quantized_sequence = note_seq.quantize_note_sequence(
@@ -534,7 +535,7 @@ class LegacyEventListOneHotConverter(BaseNoteSequenceConverter):
         quantized_sequence = note_seq.quantize_note_sequence_absolute(
             note_sequence, self._steps_per_second)
     except (note_seq.BadTimeSignatureError, note_seq.NonIntegerStepsPerBarError,
-            note_seq.NegativeTimeError) as e:
+            note_seq.NegativeTimeError):
       return ConverterTensors()
 
     if (self._chord_encoding and not any(
@@ -754,7 +755,8 @@ class OneHotMelodyConverter(LegacyEventListOneHotConverter):
     note_sequence.notes.extend([n for n in notes if is_valid(n)])
     return super(OneHotMelodyConverter, self).to_tensors(note_sequence)
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
+    note_sequence = item
     return split_process_and_combine(note_sequence,
                                      self._presplit_on_time_changes,
                                      self.max_tensors_per_notesequence,
@@ -840,9 +842,9 @@ class DrumsConverter(BaseNoteSequenceConverter):
 
     super(DrumsConverter, self).__init__(
         input_depth=input_depth,
-        input_dtype=np.bool,
+        input_dtype=bool,
         output_depth=output_depth,
-        output_dtype=np.bool,
+        output_dtype=bool,
         end_token=output_depth - 1 if add_end_token else None,
         presplit_on_time_changes=presplit_on_time_changes,
         max_tensors_per_notesequence=max_tensors_per_notesequence)
@@ -856,7 +858,7 @@ class DrumsConverter(BaseNoteSequenceConverter):
           self._steps_per_bar):
         return ConverterTensors()
     except (note_seq.BadTimeSignatureError, note_seq.NonIntegerStepsPerBarError,
-            note_seq.NegativeTimeError) as e:
+            note_seq.NegativeTimeError):
       return ConverterTensors()
 
     new_notes = []
@@ -898,7 +900,7 @@ class DrumsConverter(BaseNoteSequenceConverter):
         else:
           t_roll = t
         rolls.append(np.vstack([
-            self._pr_encoder_decoder.events_to_input(t_roll, i).astype(np.bool)
+            self._pr_encoder_decoder.events_to_input(t_roll, i).astype(bool)
             for i in range(len(t_roll))]))
       if not (self._roll_input and self._roll_output):
         labels = [self._oh_encoder_decoder.encode_event(e) for e in t]
@@ -907,7 +909,7 @@ class DrumsConverter(BaseNoteSequenceConverter):
         oh_vecs.append(np_onehot(
             labels,
             self._oh_encoder_decoder.num_classes + (self.end_token is not None),
-            np.bool))
+            bool))
 
     if self._roll_input:
       input_seqs = [
@@ -920,7 +922,8 @@ class DrumsConverter(BaseNoteSequenceConverter):
 
     return ConverterTensors(inputs=input_seqs, outputs=output_seqs)
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
+    note_sequence = item
     return split_process_and_combine(note_sequence,
                                      self._presplit_on_time_changes,
                                      self.max_tensors_per_notesequence,
@@ -1016,9 +1019,9 @@ class TrioConverter(BaseNoteSequenceConverter):
 
     super(TrioConverter, self).__init__(
         input_depth=output_depth,
-        input_dtype=np.bool,
+        input_dtype=bool,
         output_depth=output_depth,
-        output_dtype=np.bool,
+        output_dtype=bool,
         control_depth=self._melody_converter.control_depth,
         control_dtype=self._melody_converter.control_dtype,
         end_token=False,
@@ -1069,7 +1072,7 @@ class TrioConverter(BaseNoteSequenceConverter):
     # Assign an instrument class for each instrument, and compute its coverage.
     # If an instrument has multiple classes, it is considered INVALID.
     instrument_type = np.zeros(MAX_INSTRUMENT_NUMBER + 1, np.uint8)
-    coverage = np.zeros((total_bars, MAX_INSTRUMENT_NUMBER + 1), np.bool)
+    coverage = np.zeros((total_bars, MAX_INSTRUMENT_NUMBER + 1), bool)
     for note in quantized_sequence.notes:
       i = note.instrument
       if i > MAX_INSTRUMENT_NUMBER:
@@ -1163,7 +1166,8 @@ class TrioConverter(BaseNoteSequenceConverter):
 
     return ConverterTensors(inputs=seqs, outputs=seqs, controls=control_seqs)
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
+    note_sequence = item
     return split_process_and_combine(note_sequence,
                                      self._presplit_on_time_changes,
                                      self.max_tensors_per_notesequence,
@@ -1330,7 +1334,7 @@ class GrooveConverter(BaseNoteSequenceConverter):
         output_depth=output_depth,
         output_dtype=np.float32,
         control_depth=control_depth,
-        control_dtype=np.bool,
+        control_dtype=bool,
         end_token=False,
         presplit_on_time_changes=False,
         max_tensors_per_notesequence=max_tensors_per_notesequence)
@@ -1395,7 +1399,7 @@ class GrooveConverter(BaseNoteSequenceConverter):
     else:
       raise ValueError('Unlisted feature: ' + feature)
 
-  def to_tensors(self, note_sequence):
+  def to_tensors(self, item):
 
     def _get_steps_hash(note_sequence):
       """Partitions all Notes in a NoteSequence by quantization step and drum.
@@ -1443,6 +1447,7 @@ class GrooveConverter(BaseNoteSequenceConverter):
       return [tensor[i:i+window_size, :] for i in range(
           0, len(tensor) - window_size  + 1, hop_size)]
 
+    note_sequence = item
     try:
       quantized_sequence = sequences_lib.quantize_note_sequence(
           note_sequence, self._steps_per_quarter)
@@ -1568,12 +1573,12 @@ class GrooveConverter(BaseNoteSequenceConverter):
     # Controls section.
     controls = []
     if self._hits_as_controls:
-      controls.append(hit_vectors.astype(np.bool))
+      controls.append(hit_vectors.astype(bool))
     if self._split_instruments:
       # Cycle through instrument numbers.
       controls.append(np.tile(
           np_onehot(
-              np.arange(self._num_drums), self._num_drums, np.bool),
+              np.arange(self._num_drums), self._num_drums, bool),
           (max_step, 1)))
     controls = np.concatenate(controls, axis=-1) if controls else None
 

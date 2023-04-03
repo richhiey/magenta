@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ def softmax(p, axis=None, temperature=1):
     p = np.exp(logp)
   p /= p.sum(axis=axis, keepdims=True)
   if np.isnan(p).any():
-    pdb.set_trace()
+    pdb.set_trace()  # pylint: disable=forgotten-debug-statement
   return p
 
 
@@ -274,7 +274,7 @@ def batches(*xss, **kwargs):
 
   Yields batches of the form `[xs[indices] for xs in xss]` where at each
   iteration `indices` selects a subset. Each index is only selected once.
-  **kwards could be one of the following:
+  **kwargs could be one of the following:
     size: number of elements per batch
     discard_remainder: if true, discard final short batch
     shuffle: if true, yield examples in randomly determined order

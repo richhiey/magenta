@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Trains the N-styles style transfer model."""
 import ast
 import os
@@ -112,8 +111,8 @@ def main(unused_argv=None):
       total_loss, loss_dict = learning.total_loss(
           inputs, stylized_inputs, style_gram_matrices, content_weights,
           style_weights)
-      for key in loss_dict:
-        tf.summary.scalar(key, loss_dict[key])
+      for key, value in loss_dict.items():
+        tf.summary.scalar(key, value)
 
       # Adding Image summaries to the tensorboard.
       tf.summary.image('image/0_inputs', inputs, 3)

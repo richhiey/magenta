@@ -15,7 +15,7 @@ Note that you can only interface with a trained models that have a
 ## Example Demo
 
 The simplest way to try this interface is using the
-[AI Jam demo](https://github.com/tensorflow/magenta-demos/tree/master/ai-jam-js). The instructions below provide a more basic
+[AI Jam demo](https://github.com/tensorflow/magenta-demos/tree/main/ai-jam-js). The instructions below provide a more basic
 customizable interaction that is more difficult to set up.
 
 ## Installing Dependencies
@@ -66,8 +66,8 @@ install one by doing the following:
 
 **Ubuntu:** Use the command `sudo apt-get install fluid-soundfont-gm`.<br />
 **Mac:** Download the soundfont from
-http://www.musescore.org/download/fluid-soundfont.tar.gz and unpack the SF2
-file.
+https://ftp.osuosl.org/pub/musescore/soundfont/fluid-soundfont.tar.gz and unpack the SF2
+file or choose one from this list https://musescore.org/en/handbook/soundfonts-and-sfz-files#list.
 
 ## Set Up
 

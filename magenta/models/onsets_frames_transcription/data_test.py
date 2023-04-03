@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -178,8 +178,8 @@ class DataTest(tf.test.TestCase):
 
     for i, length in enumerate(lengths):
       wav_samples = np.zeros(
-          (np.int((length / data.hparams_frames_per_second(hparams)) *
-                  hparams.sample_rate), 1), np.float32)
+          (int((length / data.hparams_frames_per_second(hparams)) *
+               hparams.sample_rate), 1), np.float32)
       wav_data = audio_io.samples_to_wav_data(wav_samples, hparams.sample_rate)
 
       num_frames = data.wav_to_num_frames(

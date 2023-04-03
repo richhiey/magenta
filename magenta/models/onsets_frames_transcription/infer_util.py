@@ -1,4 +1,4 @@
-# Copyright 2021 The Magenta Authors.
+# Copyright 2022 The Magenta Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ def probs_to_pianoroll_viterbi(frame_probs, onset_probs, alpha=0.5):
   """
   n, d = onset_probs.shape
 
-  loss_matrix = np.zeros([n, d, 2], dtype=np.float)
-  path_matrix = np.zeros([n, d, 2], dtype=np.bool)
+  loss_matrix = np.zeros([n, d, 2], dtype=float)
+  path_matrix = np.zeros([n, d, 2], dtype=bool)
 
   frame_losses = (1 - alpha) * -np.log(np.stack([1 - frame_probs,
                                                  frame_probs], axis=-1))
@@ -71,7 +71,7 @@ def probs_to_pianoroll_viterbi(frame_probs, onset_probs, alpha=0.5):
 
     loss_matrix[i, :, :] += frame_losses[i, :, :]
 
-  pianoroll = np.zeros([n, d], dtype=np.bool)
+  pianoroll = np.zeros([n, d], dtype=bool)
   pianoroll[n - 1, :] = np.argmin(loss_matrix[n - 1, :, :], axis=-1)
   for i in range(n - 2, -1, -1):
     pianoroll[i, :] = path_matrix[
