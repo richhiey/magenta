@@ -30,21 +30,21 @@ import tensorflow.compat.v1 as tf
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('output_directory', None, 'Path to output_directory')
+tf.app.flags.DEFINE_string('output_directory', "gs://magenta_oaf/oaf_train_data/processed/", 'Path to output_directory')
 tf.app.flags.DEFINE_integer('min_length', 5, 'minimum length for a segment')
 tf.app.flags.DEFINE_integer('max_length', 20, 'maximum length for a segment')
 tf.app.flags.DEFINE_integer('sample_rate', 16000,
                             'sample_rate of the output files')
-tf.app.flags.DEFINE_boolean('preprocess_examples', False,
+tf.app.flags.DEFINE_boolean('preprocess_examples', True,
                             'Whether to preprocess examples.')
 tf.app.flags.DEFINE_integer(
     'preprocess_train_example_multiplier', 1,
     'How many times to run data preprocessing on each training example. '
     'Useful if preprocessing involves a stochastic process that is useful to '
     'sample multiple times.')
-tf.app.flags.DEFINE_string('config', 'onsets_frames',
+tf.app.flags.DEFINE_string('config', 'drums',
                            'Name of the config to use.')
-tf.app.flags.DEFINE_string('dataset_config', 'maestro',
+tf.app.flags.DEFINE_string('dataset_config', 'egmd',
                            'Name of the dataset config to use.')
 tf.app.flags.DEFINE_string(
     'hparams', '',

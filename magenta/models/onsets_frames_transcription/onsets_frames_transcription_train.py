@@ -34,13 +34,13 @@ tf.app.flags.DEFINE_string('master', '',
                            'Name of the TensorFlow runtime to use.')
 tf.app.flags.DEFINE_string('tpu_cluster', None,
                            'Name of the TPU Cluster to use.')
-tf.app.flags.DEFINE_string('config', 'onsets_frames',
+tf.app.flags.DEFINE_string('config', 'drums',
                            'Name of the config to use.')
 tf.app.flags.DEFINE_string(
     'examples_path', None,
     'Path to a TFRecord file of train/eval examples.')
 tf.app.flags.DEFINE_boolean(
-    'preprocess_examples', True,
+    'preprocess_examples', False,
     'Whether to preprocess examples or assume they have already been '
     'preprocessed.')
 tf.app.flags.DEFINE_string(
