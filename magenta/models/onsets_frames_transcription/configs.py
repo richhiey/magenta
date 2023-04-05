@@ -133,17 +133,17 @@ DATASET_CONFIG_MAP['maestro'] = [
 DATASET_CONFIG_MAP['egmd'] = [
     DatasetConfig(
         'train',
-        'gs://magenta_oaf/oaf_train_data/train.tfrecord-00000-of-00001',
+        'gs://magenta_oaf/oaf_train_data/train.tfrecord@10',
         num_mixes=None,
         process_for_training=True),
     DatasetConfig(
         'test',
-        'gs://magenta_oaf/oaf_train_data/test.tfrecord-00000-of-00001',
+        'gs://magenta_oaf/oaf_train_data/test.tfrecord@10',
         num_mixes=None,
         process_for_training=False),
     DatasetConfig(
         'validation',
-        'gs://magenta_oaf/oaf_train_data/validation.tfrecord-00000-of-00001',
+        'gs://magenta_oaf/oaf_train_data/validation.tfrecord@10',
         num_mixes=None,
         process_for_training=False),
 ]
