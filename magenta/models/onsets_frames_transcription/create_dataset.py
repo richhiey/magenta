@@ -30,7 +30,7 @@ import tensorflow.compat.v1 as tf
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('output_directory', "gs://magenta_oaf/oaf_train_data/processed/", 'Path to output_directory')
+tf.app.flags.DEFINE_string('output_directory', "/home/richhiey/projects/data/oaf_training/preprocess/data/", 'Path to output_directory')
 tf.app.flags.DEFINE_integer('min_length', 5, 'minimum length for a segment')
 tf.app.flags.DEFINE_integer('max_length', 20, 'maximum length for a segment')
 tf.app.flags.DEFINE_integer('sample_rate', 16000,
@@ -50,7 +50,7 @@ tf.app.flags.DEFINE_string(
     'hparams', '',
     'A comma-separated list of `name=value` hyperparameter values.')
 tf.app.flags.DEFINE_string(
-    'pipeline_options', '--runner=DirectRunner',
+    'pipeline_options', '--runner=DirectRunner, --max_num_workers=1',
     'Command line flags to use in constructing the Beam pipeline options.')
 tf.app.flags.DEFINE_boolean(
     'load_audio_with_librosa', False,
