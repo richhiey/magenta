@@ -30,7 +30,7 @@ import tensorflow.compat.v1 as tf
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('output_directory', "/home/richhiey/projects/data/oaf_training/preprocess/data/", 'Path to output_directory')
+tf.app.flags.DEFINE_string('output_directory', "/home/richhiey/projects/data/common/Drums-20230417T131435Z-001/processed", 'Path to output_directory')
 tf.app.flags.DEFINE_integer('min_length', 5, 'minimum length for a segment')
 tf.app.flags.DEFINE_integer('max_length', 20, 'maximum length for a segment')
 tf.app.flags.DEFINE_integer('sample_rate', 16000,
@@ -50,7 +50,7 @@ tf.app.flags.DEFINE_string(
     'hparams', '',
     'A comma-separated list of `name=value` hyperparameter values.')
 tf.app.flags.DEFINE_string(
-    'pipeline_options', '--runner=DirectRunner, --max_num_workers=1',
+    'pipeline_options', '--runner=DirectRunner',
     'Command line flags to use in constructing the Beam pipeline options.')
 tf.app.flags.DEFINE_boolean(
     'load_audio_with_librosa', False,
@@ -123,8 +123,11 @@ def preprocess_data(
     input_tensors = preprocess_example_fn(
         example_proto=example_proto, hparams=hparams,
         is_training=process_for_training)
-
-    with tf.Session() as sess:
+    config = tf.ConfigProto(
+      intra_op_parallelism_threads=4, 
+      inter_op_parallelism_threads=4, 
+      allow_soft_placement=True)
+    with tf.Session(config=config) as sess:
       preprocessed = sess.run(input_tensors)
 
   example = input_tensors_to_example_fn(preprocessed, hparams)
@@ -208,6 +211,7 @@ def pipeline(config_map, dataset_config_map, preprocess_example_fn,
         'datasets: {}'.format(datasets),
     ]))
 
+  # options=pipeline_options
   with beam.Pipeline(options=pipeline_options) as p:
     for dataset in datasets:
       if isinstance(dataset.path, (list, tuple)):

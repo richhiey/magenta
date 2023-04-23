@@ -133,17 +133,17 @@ DATASET_CONFIG_MAP['maestro'] = [
 DATASET_CONFIG_MAP['egmd'] = [
     DatasetConfig(
         'train',
-        '/home/richhiey/projects/data/oaf_training/mygroove_data/preprocess/train.tfrecord@10',
+        '/home/richhiey/projects/data/common/Drums-20230417T131435Z-001/tfrecords/train.tfrecord@10',
         num_mixes=None,
         process_for_training=True),
     DatasetConfig(
         'test',
-        '/home/richhiey/projects/data/oaf_training/mygroove_data/preprocess/test.tfrecord@10',
+        '/home/richhiey/projects/data/common/Drums-20230417T131435Z-001/tfrecords/test.tfrecord@10',
         num_mixes=None,
         process_for_training=False),
     DatasetConfig(
         'validation',
-        '/home/richhiey/projects/data/oaf_training/mygroove_data/preprocess/validation.tfrecord@10',
+        '/home/richhiey/projects/data/common/Drums-20230417T131435Z-001/tfrecords/validation.tfrecord@10',
         num_mixes=None,
         process_for_training=False),
 ]
